@@ -1,0 +1,162 @@
+<%- include('partials/header', { currentPage: 'settings', currentEmail, unreadCount: 0 }) %>
+
+<main class="main">
+  <div class="container container-narrow">
+    <%- include('partials/flash', { flash }) %>
+
+    <h2 class="page-title">⚙️ Settings</h2>
+
+    <!-- Current Session -->
+    <div class="settings-card">
+      <h3 class="settings-card-title">📬 Current Session</h3>
+      <% if (currentEmail) { %>
+        <div class="settings-row">
+          <div>
+            <label>Active Address</label>
+            <div class="sub">Your current ghost email address</div>
+          </div>
+          <code class="settings-email"><%= currentEmail %></code>
+        </div>
+        <div class="settings-row">
+          <div>
+            <label>Reset Session</label>
+            <div class="sub">Clear your current address and start fresh</div>
+          </div>
+          <form action="/reset" method="POST">
+            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Reset and clear session?')">🗑️ Reset</button>
+          </form>
+        </div>
+      <% } else { %>
+        <div class="settings-empty">No active session. <a href="/">Generate an address</a> first.</div>
+      <% } %>
+    </div>
+
+    <!-- Notifications (UI only) -->
+    <div class="settings-card">
+      <h3 class="settings-card-title">🔔 Notifications</h3>
+      <div class="settings-row">
+        <div>
+          <label>New Email Alerts</label>
+          <div class="sub">Browser notification when mail arrives</div>
+        </div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="settings-row">
+        <div>
+          <label>Sound Alerts</label>
+          <div class="sub">Play a sound on new email</div>
+        </div>
+        <div class="toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="settings-row">
+        <div>
+          <label>Auto-Refresh Inbox <span class="badge-soon">SOON</span></label>
+          <div class="sub">Auto-check for new email every 60 seconds</div>
+        </div>
+        <div class="toggle disabled"></div>
+      </div>
+    </div>
+
+    <!-- Privacy -->
+    <div class="settings-card">
+      <h3 class="settings-card-title">🔐 Privacy</h3>
+      <div class="settings-row">
+        <div>
+          <label>Clear on Session End</label>
+          <div class="sub">Email history is cleared when session expires</div>
+        </div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="settings-row">
+        <div>
+          <label>Block Tracking Pixels <span class="badge-soon">SOON</span></label>
+          <div class="sub">Prevent senders from knowing you opened their email</div>
+        </div>
+        <div class="toggle disabled"></div>
+      </div>
+      <div class="settings-row">
+        <div>
+          <label>Spam Filter Level</label>
+          <div class="sub">Aggressiveness of incoming mail filtering</div>
+        </div>
+        <select class="setting-select">
+          <option>Standard</option>
+          <option>Aggressive</option>
+          <option>Off</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Appearance -->
+    <div class="settings-card">
+      <h3 class="settings-card-title">🎨 Appearance</h3>
+      <div class="settings-row">
+        <div>
+          <label>Theme</label>
+          <div class="sub">Interface color scheme</div>
+        </div>
+        <select class="setting-select">
+          <option>Ghost Dark</option>
+          <option disabled>Light Mode (Soon)</option>
+          <option disabled>Hacker Green (Soon)</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <div>
+          <label>Preview Length</label>
+          <div class="sub">Characters shown in inbox list</div>
+        </div>
+        <select class="setting-select">
+          <option>Short (80)</option>
+          <option selected>Medium (160)</option>
+          <option>Long (320)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- API Info -->
+    <div class="settings-card">
+      <h3 class="settings-card-title">🔌 API Endpoints</h3>
+      <div class="api-endpoints">
+        <div class="endpoint-row">
+          <span class="method get">GET</span>
+          <code>/api/generate</code>
+          <span class="ep-desc">Generate new email address</span>
+        </div>
+        <div class="endpoint-row">
+          <span class="method get">GET</span>
+          <code>/api/inbox</code>
+          <span class="ep-desc">Fetch full inbox as JSON</span>
+        </div>
+        <div class="endpoint-row">
+          <span class="method get">GET</span>
+          <code>/api/mail/:id</code>
+          <span class="ep-desc">Get single email by ID</span>
+        </div>
+        <div class="endpoint-row">
+          <span class="method del">DEL</span>
+          <code>/api/mail/:id</code>
+          <span class="ep-desc">Delete email by ID</span>
+        </div>
+        <div class="endpoint-row">
+          <span class="method get">GET</span>
+          <code>/api/domains</code>
+          <span class="ep-desc">List available domains</span>
+        </div>
+        <div class="endpoint-row">
+          <span class="method get">GET</span>
+          <code>/api/session</code>
+          <span class="ep-desc">Current session info</span>
+        </div>
+        <div class="endpoint-row">
+          <span class="method post">POST</span>
+          <code>/api/reset</code>
+          <span class="ep-desc">Reset current session</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<%- include('partials/footer') %>

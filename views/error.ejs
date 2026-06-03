@@ -1,0 +1,13 @@
+<%- include('partials/header', { currentPage: '', currentEmail: null, unreadCount: 0 }) %>
+
+<main class="main">
+  <div class="container" style="text-align:center; padding-top:80px">
+    <div style="font-size:72px; margin-bottom:20px">👻</div>
+    <h1 style="font-size:80px; font-weight:800; color:var(--accent); font-family:'Space Mono',monospace; margin:0"><%= code %></h1>
+    <h2 style="font-size:24px; margin:16px 0 10px"><%= title %></h2>
+    <p style="color:var(--muted); margin-bottom:32px"><%= message %></p>
+    <a href="/" class="btn btn-primary">← Go Home</a>
+  </div>
+</main>
+
+<%- include('partials/footer') %>

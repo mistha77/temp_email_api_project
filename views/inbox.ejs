@@ -1,0 +1,125 @@
+<%- include('partials/header', { currentPage: 'inbox', currentEmail, unreadCount }) %>
+
+<main class="main">
+  <div class="container">
+    <%- include('partials/flash', { flash }) %>
+
+    <!-- Inbox header -->
+    <div class="inbox-header">
+      <div>
+        <h2 class="page-title">📥 Inbox</h2>
+        <% if (currentEmail) { %>
+          <code class="email-tag"><%= currentEmail %></code>
+        <% } %>
+      </div>
+      <div class="inbox-actions">
+        <a href="/inbox" class="btn btn-outline btn-sm">🔄 Refresh</a>
+        <a href="/" class="btn btn-ghost btn-sm">⚡ New Email</a>
+      </div>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <span class="stat-val"><%= mails.length %></span>
+        <span class="stat-lbl">Total</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val accent"><%= unreadCount %></span>
+        <span class="stat-lbl">Unread</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val"><%= mails.filter(m => { const d = new Date(m.date); const n = new Date(); return d.toDateString() === n.toDateString(); }).length %></span>
+        <span class="stat-lbl">Today</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val muted">—</span>
+        <span class="stat-lbl">Spam Blocked</span>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="inbox-toolbar">
+      <form method="GET" action="/inbox" class="search-form">
+        <div class="search-box">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" name="q" value="<%= search %>" placeholder="Search emails..." class="search-input">
+        </div>
+        <button type="submit" class="btn btn-outline btn-sm">Search</button>
+      </form>
+
+      <div class="filter-tabs">
+        <a href="/inbox?filter=all" class="filter-tab <%= filter === 'all' ? 'active' : '' %>">All</a>
+        <a href="/inbox?filter=unread" class="filter-tab <%= filter === 'unread' ? 'active' : '' %>">Unread</a>
+        <a href="/inbox?filter=read" class="filter-tab <%= filter === 'read' ? 'active' : '' %>">Read</a>
+      </div>
+    </div>
+
+    <!-- Mail List -->
+    <% 
+      let displayMails = mails;
+      if (filter === 'unread') displayMails = mails.filter(m => !m.read);
+      if (filter === 'read') displayMails = mails.filter(m => m.read);
+      if (search) displayMails = displayMails.filter(m =>
+        m.from.toLowerCase().includes(search.toLowerCase()) ||
+        m.subject.toLowerCase().includes(search.toLowerCase()) ||
+        m.preview.toLowerCase().includes(search.toLowerCase())
+      );
+    %>
+
+    <% if (!currentEmail) { %>
+      <div class="empty-state">
+        <div class="empty-icon">👻</div>
+        <h3>No Ghost Address Yet</h3>
+        <p>You need to generate a disposable email first.</p>
+        <a href="/" class="btn btn-primary" style="margin-top:16px">⚡ Generate Email</a>
+      </div>
+
+    <% } else if (displayMails.length === 0) { %>
+      <div class="empty-state">
+        <div class="empty-icon">📭</div>
+        <h3>Inbox is Empty</h3>
+        <p>Use <strong><%= currentEmail %></strong> to receive emails.<br>They'll show up here.</p>
+        <a href="/inbox" class="btn btn-outline" style="margin-top:16px">🔄 Refresh</a>
+      </div>
+
+    <% } else { %>
+      <div class="mail-list">
+        <% const colors = ['#7c3aed','#059669','#d97706','#dc2626','#2563eb','#db2777','#0891b2']; %>
+        <% displayMails.forEach((mail, i) => { %>
+          <% const col = colors[i % colors.length]; %>
+          <% const initial = (mail.from[0] || '?').toUpperCase(); %>
+          <% const dateStr = new Date(mail.date).toLocaleString('en-IN', { dateStyle:'medium', timeStyle:'short' }); %>
+
+          <a href="/mail/<%= mail.id %>" class="mail-item <%= mail.read ? 'read' : 'unread' %>">
+            <div class="mail-avatar" style="background:<%= col %>22; color:<%= col %>">
+              <%= initial %>
+            </div>
+            <div class="mail-meta">
+              <div class="mail-from"><%= mail.from %></div>
+              <div class="mail-subject"><%= mail.subject %></div>
+              <div class="mail-preview"><%= mail.preview %></div>
+            </div>
+            <div class="mail-right">
+              <div class="mail-date"><%= dateStr %></div>
+              <% if (!mail.read) { %><span class="unread-dot"></span><% } %>
+              <% if (mail.hasAttachment) { %><span class="attach-icon">📎</span><% } %>
+            </div>
+          </a>
+
+        <% }) %>
+      </div>
+
+      <div class="inbox-footer">
+        Showing <%= displayMails.length %> of <%= mails.length %> emails
+        &nbsp;·&nbsp;
+        <form action="/reset" method="POST" style="display:inline">
+          <button type="submit" class="link-btn" onclick="return confirm('Clear all and reset?')">Clear session</button>
+        </form>
+      </div>
+    <% } %>
+
+  </div>
+</main>
+
+<%- include('partials/footer') %>

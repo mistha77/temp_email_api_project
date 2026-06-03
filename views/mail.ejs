@@ -1,0 +1,103 @@
+<%- include('partials/header', { currentPage: 'inbox', currentEmail, unreadCount: 0 }) %>
+
+<main class="main">
+  <div class="container container-narrow">
+    <%- include('partials/flash', { flash }) %>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="/">Home</a>
+      <span>›</span>
+      <a href="/inbox">Inbox</a>
+      <span>›</span>
+      <span>Email</span>
+    </div>
+
+    <!-- Mail card -->
+    <div class="mail-card">
+      <!-- Mail header -->
+      <div class="mail-card-header">
+        <div class="mail-card-subject"><%= mail.subject %></div>
+
+        <div class="mail-card-meta">
+          <div class="meta-row">
+            <span class="meta-label">From:</span>
+            <span class="meta-val"><%= mail.from %></span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">To:</span>
+            <span class="meta-val accent"><%= mail.to || currentEmail %></span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">Date:</span>
+            <span class="meta-val"><%= new Date(mail.date).toLocaleString('en-IN', { dateStyle: 'full', timeStyle: 'short' }) %></span>
+          </div>
+          <% if (mail.attachments && mail.attachments.length > 0) { %>
+          <div class="meta-row">
+            <span class="meta-label">Attachments:</span>
+            <span class="meta-val">📎 <%= mail.attachments.length %> file(s)</span>
+          </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Mail body -->
+      <div class="mail-card-body">
+        <% if (mail.bodyHtml) { %>
+          <div class="mail-html-body">
+            <%- mail.bodyHtml %>
+          </div>
+        <% } else { %>
+          <pre class="mail-text-body"><%= mail.bodyText %></pre>
+        <% } %>
+      </div>
+
+      <!-- Attachments -->
+      <% if (mail.attachments && mail.attachments.length > 0) { %>
+      <div class="mail-attachments">
+        <h4>📎 Attachments</h4>
+        <% mail.attachments.forEach(att => { %>
+        <div class="attachment-item">
+          <span class="att-icon">📄</span>
+          <span class="att-name"><%= att.filename || att.name || 'attachment' %></span>
+          <span class="att-size"><%= att.size ? (att.size / 1024).toFixed(1) + ' KB' : '' %></span>
+          <span class="att-coming">Download coming soon</span>
+        </div>
+        <% }) %>
+      </div>
+      <% } %>
+
+      <!-- Actions footer -->
+      <div class="mail-card-footer">
+        <a href="/inbox" class="btn btn-outline">← Back to Inbox</a>
+        <div class="mail-actions-right">
+          <button class="btn btn-ghost" onclick="copyMailContent()" title="Copy email content">📋 Copy Content</button>
+          <button class="btn btn-ghost btn-disabled" title="Coming soon" disabled>↩️ Reply (Soon)</button>
+          <button class="btn btn-ghost btn-disabled" title="Coming soon" disabled>⬇️ Download .eml (Soon)</button>
+          <form action="/mail/<%= mail.id %>/delete" method="POST" style="display:inline"
+            onsubmit="return confirm('Delete this email permanently?')">
+            <button type="submit" class="btn btn-danger">🗑️ Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Raw JSON (dev helper) -->
+    <details class="raw-block">
+      <summary>🔧 Raw API Response (Dev View)</summary>
+      <pre><%= JSON.stringify(mail.raw || mail, null, 2) %></pre>
+    </details>
+
+  </div>
+</main>
+
+<script>
+function copyMailContent() {
+  const body = document.querySelector('.mail-html-body, .mail-text-body');
+  if (body) {
+    navigator.clipboard.writeText(body.innerText).then(() => showToast('📋 Content copied!'));
+  }
+}
+</script>
+
+<%- include('partials/footer') %>

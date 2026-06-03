@@ -1,0 +1,11 @@
+<% if (flash) { %>
+<div class="flash flash-<%= flash.type %>">
+  <span class="flash-icon">
+    <% if (flash.type === 'success') { %>✅<% } %>
+    <% if (flash.type === 'error') { %>❌<% } %>
+    <% if (flash.type === 'info') { %>ℹ️<% } %>
+  </span>
+  <%= flash.msg %>
+  <button class="flash-close" onclick="this.parentElement.remove()">✕</button>
+</div>
+<% } %>

@@ -1,0 +1,139 @@
+<%- include('partials/header', { currentPage: 'home', currentEmail, unreadCount: 0 }) %>
+
+<main class="main">
+  <div class="container">
+    <%- include('partials/flash', { flash }) %>
+
+    <!-- HERO -->
+    <section class="hero-card">
+      <div class="hero-glow"></div>
+
+      <h1 class="hero-title">Your <em>Ghost</em> Inbox</h1>
+      <p class="hero-sub">One click gets you a real, working disposable email address. No sign-up. No trace. Auto-generated and ready to use.</p>
+
+      <% if (currentEmail) { %>
+
+        <!-- ── ACTIVE EMAIL ── -->
+        <div class="email-box-wrap">
+          <p class="email-box-label">YOUR ACTIVE GHOST ADDRESS</p>
+          <div class="email-box">
+            <span class="email-box-addr" id="email-addr"><%= currentEmail %></span>
+            <button class="copy-btn" onclick="copyToClipboard('<%= currentEmail %>')" title="Copy to clipboard">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="9" y="9" width="13" height="13" rx="2"/>
+                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+              </svg>
+              Copy
+            </button>
+          </div>
+          <p class="email-box-hint">
+            <span class="pulse-dot"></span>
+            Active &amp; ready — use this address on any website signup form
+          </p>
+        </div>
+
+        <div class="btn-row">
+          <a href="/inbox" class="btn btn-primary">📥 Check Inbox</a>
+          <form action="/generate" method="POST" style="display:inline">
+            <button type="submit" class="btn btn-outline">🔄 Generate New</button>
+          </form>
+          <form action="/reset" method="POST" style="display:inline"
+                onsubmit="return confirm('Clear session and discard this address?')">
+            <button type="submit" class="btn btn-ghost">🗑️ Reset</button>
+          </form>
+        </div>
+
+      <% } else { %>
+
+        <!-- ── NO EMAIL YET ── -->
+        <div class="email-box-wrap empty">
+          <div class="email-box empty">
+            <span class="email-box-placeholder">―― no address generated yet ――</span>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <form action="/generate" method="POST">
+            <button type="submit" class="btn btn-primary btn-large">⚡ Generate Ghost Email</button>
+          </form>
+        </div>
+        <p style="color:var(--muted); font-size:13px; margin-top:16px; text-align:center">Free · Instant · No registration required</p>
+
+      <% } %>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-section">
+      <h3 class="section-label">How It Works</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h4>Generate</h4>
+          <p>Click the button. A unique disposable address is created instantly.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h4>Copy &amp; Use</h4>
+          <p>Copy the address and paste it into any website signup or form.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h4>Read Mail</h4>
+          <p>Open the Inbox tab. Emails arrive here in real time.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <h4>Ghost Away</h4>
+          <p>Done? Hit Reset. No trace, no spam, no regrets.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES GRID -->
+    <h3 class="section-label" style="margin-top:36px">Features</h3>
+    <div class="features-grid">
+      <div class="feature-card active">
+        <div class="feature-icon">⚡</div>
+        <h4>Instant Generation</h4>
+        <p>Random address created locally — no API latency, no 404s.</p>
+        <span class="feature-status live">LIVE</span>
+      </div>
+      <div class="feature-card active">
+        <div class="feature-icon">📥</div>
+        <h4>Real Inbox</h4>
+        <p>Emails to your ghost address are fetched live via API.</p>
+        <span class="feature-status live">LIVE</span>
+      </div>
+      <div class="feature-card coming">
+        <div class="feature-icon">✏️</div>
+        <h4>Custom Username</h4>
+        <p>Pick your own prefix for the temp address.</p>
+        <span class="feature-status soon">SOON</span>
+      </div>
+      <div class="feature-card coming">
+        <div class="feature-icon">🌐</div>
+        <h4>Domain Selection</h4>
+        <p>Choose from multiple available temp mail domains.</p>
+        <span class="feature-status soon">SOON</span>
+      </div>
+      <div class="feature-card coming">
+        <div class="feature-icon">➡️</div>
+        <h4>Forwarding</h4>
+        <p>Forward received mail silently to your real inbox.</p>
+        <span class="feature-status soon">SOON</span>
+      </div>
+      <div class="feature-card coming">
+        <div class="feature-icon">⏱️</div>
+        <h4>Auto-Expiry</h4>
+        <p>Auto-delete the mailbox after 1h, 6h, or 24h.</p>
+        <span class="feature-status soon">SOON</span>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<%- include('partials/footer') %>
