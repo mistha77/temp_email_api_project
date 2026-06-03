@@ -143,5 +143,5 @@ SESSION_SECRET=any_random_string
 
 ---
 ### Live Demo
-👉 https://ghostmail-xxxx.onrender.com
+👉 https://temp-email-api-project.onrender.com
 Built with ❤️ using Node.js + Express + EJS + RapidAPI temp-email14
