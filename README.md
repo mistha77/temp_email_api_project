@@ -142,5 +142,6 @@ SESSION_SECRET=any_random_string
 - 🔄 Auto-refresh inbox
 
 ---
-
+### Live Demo
+👉 https://ghostmail-xxxx.onrender.com
 Built with ❤️ using Node.js + Express + EJS + RapidAPI temp-email14
